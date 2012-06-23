@@ -28,7 +28,7 @@ function sendQuery($query)
 
 if(!empty($_GET['login']))
 {
-	$redirect_uri = urlencode('http://'.$_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+	$redirect_uri = urlencode('http://'.$_SERVER['SERVER_NAME']);
 	header('Location: http://dragons-nest.ru/forum/oauth.php?query=auth&redirect_uri='.$redirect_uri.'&client_id='.CLIENT_ID);
 	exit;
 }
