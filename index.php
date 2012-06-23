@@ -32,7 +32,9 @@ if(empty($_COOKIE['uid']) and empty($_GET['code']))
 }
 elseif(!empty($_GET['code']))
 {
-var_dump(sendQuery('http://dragons-nest.ru/forum/oauth.php?query=access_token&code='.$_GET['code'].'&client_id='.CLIENT_ID.'&client_secret='.CLIENT_SECRET));
+	$result = sendQuery('http://dragons-nest.ru/forum/oauth.php?query=access_token&code='.$_GET['code'].'&client_id='.CLIENT_ID.'&client_secret='.CLIENT_SECRET);
+	var_dump(sendQuery('http://dragons-nest.ru/forum/oauth.php?query=whoami&access_token='$result->access_token);
+	
 }
 else
 {
