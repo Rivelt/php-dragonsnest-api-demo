@@ -25,11 +25,19 @@ function sendQuery($query)
 	return $obj;
 }
 
-print_r($_SERVER);exit;
-if(empty($_COOKIE['uid']))
+if(empty($_COOKIE['uid']) and empty($_GET['code']))
 {
+	$redirect_uri = urlencode($_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 	header('Location: http://dragons-nest.ru/forum/oauth.php?query=auth&redirect_uri='.$redirect_uri.'&client_id='.CLIENT_ID);
 }
-var_dump(sendQuery('http://dragons-nest.ru/forum/oauth.php?query=auth&redirect_uri={link}&client_id={client_id}'));
+elseif(!empty($_GET['code']))
+{
+var_dump(sendQuery('http://dragons-nest.ru/forum/oauth.php?query=access_token&code='.$_GET['code'].'&client_id='.CLIENT_ID.'&client_secret='.CLIENT_SECRET));
+}
+else
+{
+	
+}
+
 
 
