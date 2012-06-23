@@ -5,6 +5,7 @@
 define('CLIENT_ID', 'c44e396fb98e8e7f6555911fd828fa43');
 define('CLIENT_SECRET', '0d7a0182b5297ae66d9f4b62d5bff957');
 
+session_start();
 
 function sendQuery($query)
 {
@@ -25,21 +26,40 @@ function sendQuery($query)
 	return $obj;
 }
 
-if(empty($_COOKIE['uid']) and empty($_GET['code']))
+if(!empty($_GET['login']))
 {
 	$redirect_uri = urlencode('http://'.$_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 	header('Location: http://dragons-nest.ru/forum/oauth.php?query=auth&redirect_uri='.$redirect_uri.'&client_id='.CLIENT_ID);
+	exit;
 }
 elseif(!empty($_GET['code']))
 {
 	$result = sendQuery('http://dragons-nest.ru/forum/oauth.php?query=access_token&code='.$_GET['code'].'&client_id='.CLIENT_ID.'&client_secret='.CLIENT_SECRET);
-	var_dump(sendQuery('http://dragons-nest.ru/forum/oauth.php?query=whoami&access_token='$result->access_token));
-	
+	$data = sendQuery('http://dragons-nest.ru/forum/oauth.php?query=whoami&access_token='.$result->access_token);
+	setcookie('data', serialize($data), time()+3600*24*365*10);
+	setcookie('uid', $data->uid, time()+3600*24*365*10);
+	header('Location: /');
+	exit;
 }
-else
+elseif(!empty($_GET['logout']))
 {
-	
+	if(@$_GET['sid']!=md5('salt'.session_id()))
+	{
+		echo 'What you want without pretty sid?';
+		exit;
+	}
+	setcookie('data', '');
+	setcookie('uid', '');
 }
+
+?><html>
+	<head>
+		<title>Dragon's Nest demo</title>
+	</head>
+	<body>
+		<?php print_r($_COOKIE);?>
+	</body>
+</html>
 
 
 
