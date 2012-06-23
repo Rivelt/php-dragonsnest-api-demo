@@ -50,14 +50,24 @@ elseif(!empty($_GET['logout']))
 	}
 	setcookie('data', '');
 	setcookie('uid', '');
+	header('Location: /');
+	exit;
 }
 
+$data = @unserialize(@$_COOKIE['data']);
 ?><html>
 	<head>
 		<title>Dragon's Nest demo</title>
 	</head>
 	<body>
-		<?php print_r($_COOKIE);?>
+		<?php if($data): ?>
+		Username: <?=$data->name;?><br>
+		ID: <?= $data->uid;?><br >
+		Avatar:<br> <img src="<?=$data->avatar_src?>" /><br>
+		<a href="?logout=1&sid=<?=md5('salt'.session_id())?>">Logout</a>
+		<?php else: ?>
+		<a href="?login=1">Login</a>
+		<?php endif;?>
 	</body>
 </html>
 
